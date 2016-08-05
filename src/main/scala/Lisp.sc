@@ -1,6 +1,7 @@
 //var quote = ???
 //var lambda = ???
 //var label = ???
+
 //var eval = ???
 
 var nil = Nil
@@ -14,19 +15,31 @@ var cons = (item: Any, list: List[Any]) => {
 var car = (list: List[Any]) => list.head
 var cdr = (list: List[Any]) => list.tail
 var eq = (a: Any, b: Any) => a == b
-var cond = (list: List[Any]) => {
-  list.head match {
-    case pair: List[Any] => pair.head match {
-      case expression: List[Any] => expression.head match {
-        case preposition: ((Any) => Boolean) => preposition(expression.tail)
+var cond: List[Any] => Any = (list: List[Any]) => {
+  list match {
+    case Nil => Nil
+    case (expression :: value :: Nil) :: tail =>
+      val truthy = expression match {
+        case a: Boolean => a
       }
-    }
+      if (truthy) value
+      else cond(list.tail)
+    case (a: Any) :: Nil => a
   }
 }
+var lambda = ???
+var eval: List[Any] => Unit = ???
+
+//(lambda (param1 param2) (operation param1 param2))
 
 var list = 2 :: 3 :: nil
 var consExample = cons :: 1 :: list :: nil
+var condExample = cond((true :: "7" :: Nil) :: Nil)
+var condTwoConditionsExample = cond(
+  (false :: "7" :: Nil) ::
+  (false :: "6" :: Nil) ::
+  "default" ::
+  Nil
+)
 
-atom(list)
-
-//eval(consExample) -> 1 :: 2 :: 3 :: Nil
+cond(Nil) == Nil
