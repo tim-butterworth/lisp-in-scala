@@ -27,19 +27,34 @@ var cond: List[Any] => Any = (list: List[Any]) => {
     case (a: Any) :: Nil => a
   }
 }
-var lambda = ???
-var eval: List[Any] => Unit = ???
+
+//var lambda = ???
+
+type FN = (List[Any]) => Any
+
+var eval = (forms: List[List[Any]], names: Map[String, Any]) => {
+  val firstForm: List[Any] = forms.head
+  firstForm.head match {
+    case a: FN => a(firstForm.tail.collect({
+      case name: String => names(name)
+    }))
+  }
+}
+def plus = (integers: List[Int]) => integers.sum
+eval((plus :: "x" :: "y" :: nil) :: nil, Map("x" → 1, "y" → 2))
+eval((plus :: "x" :: "y" :: nil) :: nil, Map("x" → 1, "y" → 4))
+
 
 //(lambda (param1 param2) (operation param1 param2))
 
-var list = 2 :: 3 :: nil
-var consExample = cons :: 1 :: list :: nil
-var condExample = cond((true :: "7" :: Nil) :: Nil)
-var condTwoConditionsExample = cond(
-  (false :: "7" :: Nil) ::
-  (false :: "6" :: Nil) ::
-  "default" ::
-  Nil
-)
-
-cond(Nil) == Nil
+//var list = 2 :: 3 :: nil
+//var consExample = cons :: 1 :: list :: nil
+//var condExample = cond((true :: "7" :: Nil) :: Nil)
+//var condTwoConditionsExample = cond(
+//  (false :: "7" :: Nil) ::
+//    (false :: "6" :: Nil) ::
+//    "default" ::
+//    Nil
+//)
+//
+//cond(Nil) == Nil
